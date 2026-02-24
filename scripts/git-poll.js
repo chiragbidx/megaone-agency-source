@@ -26,6 +26,7 @@ export async function startGitPoll() {
       if (sha !== lastSha) {
         console.log("[git-poll] update detected");
         await run(`git reset --hard origin/${BRANCH}`);
+        await run("git clean -fd");
         lastSha = sha;
         triggerReload();
       }

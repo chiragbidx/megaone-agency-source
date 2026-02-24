@@ -1,11 +1,16 @@
-FROM node:20
+# Minimal runtime image for static preview
+FROM node:20-alpine
+
+# install git (no cache to keep image small)
+RUN apk add --no-cache git
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# copy only what we need for runtime (no build step)
+COPY . /app
 
-COPY . .
-
+# serve on 8080
 EXPOSE 8080
 
+# start supervisor that handles git sync + static server + HMR
 CMD ["node", "scripts/static-supervisor.js"]
